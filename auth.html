@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#a765c5">
-  <title>登录或注册 · SheSay</title>
+  <title>Log in or sign up · SheSay</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://js.hcaptcha.com/1/api.js?onload=onHcaptchaLoaded&render=explicit" async defer></script>
   <link rel="stylesheet" href="site.css">
@@ -13,46 +13,46 @@
   <main class="auth-stage">
     <section class="paper auth-card">
       <div class="brand">SHE SAY / ACCOUNT</div>
-      <h1 id="title">欢迎回来</h1>
-      <p id="subtitle" class="auth-subtitle">登录后可以在网页查看你的美元钱包余额。</p>
+      <h1 id="title">Welcome back</h1>
+      <p id="subtitle" class="auth-subtitle">Log in to view your USD wallet balance on the web.</p>
 
-      <div class="tabs" role="tablist" aria-label="账号操作">
-        <button id="loginTab" type="button" class="active" role="tab">登录</button>
-        <button id="registerTab" type="button" role="tab">注册</button>
+      <div class="tabs" role="tablist" aria-label="Account actions">
+        <button id="loginTab" type="button" class="active" role="tab">Log in</button>
+        <button id="registerTab" type="button" role="tab">Sign up</button>
       </div>
 
       <form id="form" novalidate>
-        <label for="email">邮箱</label>
+        <label for="email">Email</label>
         <input id="email" type="email" autocomplete="email" required placeholder="name@example.com">
 
         <div id="nicknameField" class="hidden">
-          <label for="nickname">昵称</label>
-          <input id="nickname" type="text" autocomplete="nickname" minlength="2" maxlength="10" placeholder="2–10 个字符">
+          <label for="nickname">Nickname</label>
+          <input id="nickname" type="text" autocomplete="nickname" minlength="2" maxlength="10" placeholder="2–10 characters">
         </div>
 
-        <label for="password">密码</label>
-        <input id="password" type="password" autocomplete="current-password" required minlength="6" maxlength="16" placeholder="6–16 位，不含空格">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required minlength="6" maxlength="16" placeholder="6–16 characters, no spaces">
 
         <div id="verifyFields" class="hidden">
-          <label for="code">邮箱验证码</label>
+          <label for="code">Email verification code</label>
           <div class="code-row">
-            <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="输入邮箱中的验证码">
-            <button id="sendCode" class="button ghost" type="button">发送验证码</button>
+            <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Enter the code from your email">
+            <button id="sendCode" class="button ghost" type="button">Send code</button>
           </div>
           <div id="captcha" class="captcha-wrap"></div>
-          <p class="auth-note">验证码用于确认邮箱所有权。若邮箱已注册，验证后可选择登录原账号或删除原账号及数据后新建。</p>
+          <p class="auth-note">The code confirms email ownership. If this email already has an account, you can keep it or permanently delete it before creating a new one.</p>
         </div>
 
-        <button id="submit" class="button auth-submit" type="submit">登录并进入钱包</button>
+        <button id="submit" class="button auth-submit" type="submit">Log in and open wallet</button>
       </form>
       <div id="notice" class="notice" aria-live="polite"></div>
 
       <div id="existingChoice" class="choice-panel hidden" aria-live="polite">
-        <p><strong>该邮箱已注册。</strong><br>验证码已确认由你持有。你可以直接登录原账号并保留全部数据，或删除原账号和数据后新建账号；删除不可恢复。</p>
-        <button id="keepAccount" class="button" type="button">登录原账号，保留所有数据</button>
-        <button id="replaceAccount" class="button ghost replace" type="button">删除原账号和数据，新建账号</button>
+        <p><strong>This email is already registered.</strong><br>Your email has been verified. You can keep the original account and all data, or permanently delete it before creating a new account.</p>
+        <button id="keepAccount" class="button" type="button">Keep original account and data</button>
+        <button id="replaceAccount" class="button ghost replace" type="button">Delete original account and create new</button>
       </div>
-      <p class="auth-note" style="margin-top:25px"><a href="index.html">← 返回官网</a></p>
+      <p class="auth-note" style="margin-top:25px"><a href="index.html">← Back to website</a></p>
     </section>
   </main>
 
@@ -73,8 +73,8 @@
     function registrationValuesValid() {
       const nickname = $('nickname').value.trim();
       const password = $('password').value;
-      if (nickname.length < 2 || nickname.length > 10) throw new Error('昵称需为 2–10 个字符。');
-      if (password.length < 6 || password.length > 16 || /\s/.test(password)) throw new Error('密码需为 6–16 位且不含空格。');
+      if (nickname.length < 2 || nickname.length > 10) throw new Error('Nickname must be 2–10 characters.');
+      if (password.length < 6 || password.length > 16 || /\s/.test(password)) throw new Error('Password must be 6–16 characters with no spaces.');
     }
     function renderCaptcha() {
       if (mode !== 'register' || !window.hcaptcha || captchaWidget !== null) return;
@@ -91,14 +91,14 @@
       const registering = mode === 'register';
       $('loginTab').classList.toggle('active', !registering);
       $('registerTab').classList.toggle('active', registering);
-      $('title').textContent = registering ? '创建你的账号' : '欢迎回来';
+      $('title').textContent = registering ? 'Create your account' : 'Welcome back';
       $('subtitle').textContent = registering
-        ? '使用邮箱创建 SheSay 账号。'
-        : '登录后可以在网页查看你的美元钱包余额。';
+        ? 'Create a SheSay account with your email.'
+        : 'Log in to view your USD wallet balance on the web.';
       $('nicknameField').classList.toggle('hidden', !registering);
       $('verifyFields').classList.toggle('hidden', !registering);
       $('password').autocomplete = registering ? 'new-password' : 'current-password';
-      $('submit').textContent = registering ? '注册' : '登录并进入钱包';
+      $('submit').textContent = registering ? 'Sign up' : 'Log in and open wallet';
       $('existingChoice').classList.add('hidden');
       showNotice();
       if (registering) setTimeout(renderCaptcha, 0);
@@ -128,18 +128,18 @@
     }
     async function verifyRegistration() {
       registrationValuesValid();
-      if (!challengeId) throw new Error('请先发送邮箱验证码。');
+      if (!challengeId) throw new Error('Send an email verification code first.');
       const code = $('code').value.trim();
-      if (!code) throw new Error('请输入邮箱验证码。');
+      if (!code) throw new Error('Enter the email verification code.');
       const email = $('email').value.trim();
       const { data, error } = await sb.auth.verifyOtp({ email, token: code, type: 'email' });
       if (error) throw error;
       verifiedSession = data.session || (await sb.auth.getSession()).data.session;
-      if (!verifiedSession) throw new Error('验证码验证失败，请重新发送。');
+      if (!verifiedSession) throw new Error('Verification failed. Please send a new code.');
       const result = await SheSay.fusion('resolveEmailRegistration', { challengeId }, verifiedSession.access_token);
       if (result.existingAccount) {
         $('existingChoice').classList.remove('hidden');
-        showNotice('邮箱验证成功，请选择账号处理方式。', 'success');
+        showNotice('Email verified. Choose how to handle the existing account.', 'success');
         return;
       }
       await setProfile();
@@ -147,26 +147,26 @@
     }
     async function sendCode() {
       const email = $('email').value.trim();
-      if (!/^\S+@\S+\.\S+$/.test(email)) throw new Error('请输入有效的邮箱地址。');
+      if (!/^\S+@\S+\.\S+$/.test(email)) throw new Error('Enter a valid email address.');
       registrationValuesValid();
-      if (!captchaToken) throw new Error('请先完成人机验证。');
+      if (!captchaToken) throw new Error('Complete the human verification first.');
       const started = await SheSay.fusion('startEmailRegistration', { email });
       const { error } = await sb.auth.signInWithOtp({ email, options: { captchaToken } });
       if (error) throw error;
       challengeId = started.challengeId;
-      showNotice('验证码已发送，请查收邮箱。', 'success');
+      showNotice('Verification code sent. Check your email.', 'success');
     }
     $('loginTab').onclick = () => setMode('login');
     $('registerTab').onclick = () => setMode('register');
     $('sendCode').onclick = async () => {
       const button = $('sendCode'); button.disabled = true;
-      try { await sendCode(); } catch (error) { showNotice(error.message || '验证码发送失败。', 'error'); }
+      try { await sendCode(); } catch (error) { showNotice(error.message || 'Could not send verification code.', 'error'); }
       finally { button.disabled = false; }
     };
     $('form').onsubmit = async event => {
       event.preventDefault();
       const button = $('submit'); button.disabled = true;
-      showNotice('正在安全处理…');
+      showNotice('Processing securely…');
       try {
         if (mode === 'login') {
           const { error } = await sb.auth.signInWithPassword({
@@ -177,12 +177,12 @@
         } else {
           await verifyRegistration();
         }
-      } catch (error) { showNotice(error.message || '操作失败，请稍后重试。', 'error'); }
+      } catch (error) { showNotice(error.message || 'Something went wrong. Please try again.', 'error'); }
       finally { button.disabled = false; }
     };
     $('keepAccount').onclick = () => location.replace('wallet.html');
     $('replaceAccount').onclick = async () => {
-      if (!verifiedSession || !confirm('确认删除原账号及全部数据，并用当前信息创建新账号？此操作无法恢复。')) return;
+      if (!verifiedSession || !confirm('Delete the original account and all data to create a new account? This cannot be undone.')) return;
       const button = $('replaceAccount'); button.disabled = true;
       try {
         await SheSay.fusion('replaceExistingEmailAccount', {
@@ -194,7 +194,7 @@
         });
         if (error) throw error;
         location.replace('wallet.html');
-      } catch (error) { showNotice(error.message || '新建账号失败。', 'error'); }
+      } catch (error) { showNotice(error.message || 'Could not create the new account.', 'error'); }
       finally { button.disabled = false; }
     };
     render();

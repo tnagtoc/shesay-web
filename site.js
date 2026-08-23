@@ -14,7 +14,7 @@ window.SheSay = (() => {
       method: 'POST', headers, body: JSON.stringify({ action, ...payload }),
     });
     const body = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(body.error || '请求失败，请稍后重试。');
+    if (!response.ok) throw new Error(body.error || 'Request failed. Please try again.');
     return body;
   }
 

@@ -1,34 +1,34 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#a765c5">
-  <title>我的钱包 · SheSay</title>
+  <title>My wallet · SheSay</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
   <main class="wallet-shell">
     <div class="brand">SHE SAY / WALLET</div>
-    <section id="loading" class="paper wallet-card muted">正在安全登录并读取余额…</section>
+    <section id="loading" class="paper wallet-card muted">Signing in securely and loading your balance…</section>
     <section id="wallet" class="paper wallet-card hidden">
-      <h1>你的钱包</h1>
-      <p id="name" class="wallet-name">SheSay 用户</p>
+      <h1>Your wallet</h1>
+      <p id="name" class="wallet-name">SheSay user</p>
       <div id="balance" class="amount">$0.00</div>
-      <p class="muted">余额可用于订阅刊物、购买内容和支持作者。</p>
-      <div class="wallet-actions"><button id="refresh" class="button" type="button">刷新余额</button><button id="logout" class="button ghost" type="button">退出登录</button></div>
+      <p class="muted">Use your balance to subscribe, purchase content, and support authors.</p>
+      <div class="wallet-actions"><button id="refresh" class="button" type="button">Refresh balance</button><button id="logout" class="button ghost" type="button">Log out</button></div>
       <div class="recharge">
-        <strong>充值方式</strong>
-        <p class="muted">选择一种方式开始充值。</p>
+        <strong>Top up</strong>
+        <p class="muted">Choose a method to begin.</p>
         <div class="payment-options">
-          <button class="payment-option" type="button" data-method="alipay"><strong>支付宝</strong><span>人民币充值美元余额</span></button>
-          <button class="payment-option" type="button" data-method="usdt"><strong>USDT</strong><span>链上充值（USDT）</span></button>
+          <button class="payment-option" type="button" data-method="alipay"><strong>Alipay</strong><span>Top up your USD balance in CNY</span></button>
+          <button class="payment-option" type="button" data-method="usdt"><strong>USDT</strong><span>On-chain USDT top up</span></button>
         </div>
         <div id="notice" class="notice" aria-live="polite"></div>
       </div>
     </section>
-    <section id="login" class="paper wallet-card hidden"><p class="muted">请先登录你的 SheSay 账号。</p><a href="auth.html#login">登录或注册</a></section>
+    <section id="login" class="paper wallet-card hidden"><p class="muted">Log in to your SheSay account first.</p><a href="auth.html#login">Log in or sign up</a></section>
   </main>
   <script src="site.js"></script>
   <script>
@@ -40,15 +40,15 @@
       $('loading').classList.add('hidden');
       if (!user) { $('login').classList.remove('hidden'); return; }
       $('wallet').classList.remove('hidden');
-      $('name').textContent = user.user_metadata?.nickname || user.email || 'SheSay 用户';
+      $('name').textContent = user.user_metadata?.nickname || user.email || 'SheSay user';
       const { data, error } = await sb.from('wallets').select('balance').eq('user_id', user.id).maybeSingle();
       $('balance').textContent = '$' + Number(data?.balance || 0).toFixed(2);
-      if (error) notice('余额读取失败，请刷新后重试。', 'error');
+      if (error) notice('Could not load your balance. Please refresh and try again.', 'error');
     }
     $('refresh').onclick = load;
     $('logout').onclick = async () => { await sb.auth.signOut(); location.replace('auth.html#login'); };
     document.querySelectorAll('[data-method]').forEach(button => button.onclick = () => {
-      notice(button.dataset.method === 'alipay' ? '支付宝商户收款尚未配置，暂不能发起真实扣款。' : 'USDT 收款网络和地址尚未配置，暂不能发起真实转账。');
+      notice(button.dataset.method === 'alipay' ? 'Alipay merchant collection is not configured, so no real charge can be started yet.' : 'The USDT receiving network and address are not configured, so no real transfer can be started yet.');
     });
     load();
   </script>
