@@ -1,90 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SheSay — 她说</title>
-<style>
-  body { font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.8; color: #333; max-width: 720px; margin: 0 auto; padding: 24px 20px 60px; }
-  h1 { font-size: 26px; color: #111; }
-  h2 { font-size: 19px; color: #111; margin-top: 32px; border-left: 4px solid #a86acb; padding-left: 10px; }
-  .date { color: #888; font-size: 14px; }
-  p, li { font-size: 15px; }
-  a { color: #a86acb; text-decoration: none; }
-  .card { display: block; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 18px 20px; margin-top: 16px; color: #333; }
-  .card:hover { border-color: #a86acb; }
-  .card .title { font-size: 17px; font-weight: 600; color: #111; }
-  .card .desc { font-size: 14px; color: #666; margin-top: 4px; }
-
-  .hero { text-align: center; padding: 12px 0 4px; }
-  .hero .tagline { color: #666; font-size: 16px; margin-top: 6px; }
-  .download-btn { display: inline-block; background: #a86acb; color: #fff; font-size: 17px; font-weight: 600; padding: 13px 36px; border-radius: 24px; margin-top: 20px; }
-  .auth-btn { display: inline-block; color: #6e326f; font-size: 15px; font-weight: 600; padding: 10px 20px; border: 1px solid #c991ca; border-radius: 24px; margin: 14px 5px 0; }
-  .download-btn:hover { background: #8f4fb0; }
-  .coming-soon { color: #999; font-size: 13px; margin-top: 10px; }
-  ul { padding-left: 22px; }
-  .feature { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 18px 20px; margin-top: 16px; }
-  .feature .feature-title { font-size: 17px; font-weight: 600; color: #111; }
-  .feature p { margin: 8px 0 0; color: #555; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#a765c5">
+  <title>SheSay — 她说</title>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
+  <main class="site-shell">
+    <header class="site-header">
+      <a class="brand-link" href="index.html" aria-label="SheSay 首页">
+        <img class="brand-mark" src="app-icon.png" alt="">
+        <span class="brand-word"><strong>SheSay</strong><small>她说 · SHE SAY</small></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#about">关于</a>
+        <a href="#legal">条款</a>
+        <a class="nav-cta" href="auth.html#login">登录 / 注册</a>
+      </nav>
+    </header>
 
-<div class="hero">
-  <img src="app-icon.png" alt="SheSay app icon" style="width: 96px; height: 96px; border-radius: 22px; display: block; margin: 0 auto 12px;">
-  <h1 style="font-size: 32px;">SheSay</h1>
-  <p class="tagline">女性的生活、发现与真实交流。</p>
+    <section class="paper home-hero">
+      <img class="home-icon" src="app-icon.png" alt="SheSay 应用图标">
+      <p class="eyebrow">SHE SAY · FOR HER VOICE</p>
+      <h1>把真实的她们，<br>写进彼此的生活。</h1>
+      <p class="home-lead">SheSay 是面向女性的社区：分享生活、发现与观点，也和真正理解你的人相遇。</p>
+      <div class="action-row">
+        <a class="button" href="auth.html#register">创建账号</a>
+        <a class="button ghost" href="auth.html#login">登录已有账号</a>
+        <a class="button ghost" href="wallet.html">我的钱包</a>
+      </div>
+    </section>
 
-  <!-- 下载按钮：App 尚未发布，先预留占位。正式发布后把 href 替换为真实的 APK/AAB 或 Google Play 链接 -->
-  <a class="download-btn" href="#">下载 App</a>
-  <p class="coming-soon">App 即将上线。</p>
-  <p><a class="auth-btn" href="auth.html#login">登录</a><a class="auth-btn" href="auth.html#register">注册</a><a class="auth-btn" href="wallet.html">我的钱包</a></p>
-</div>
+    <section id="about" class="paper home-content" style="margin-top:16px">
+      <p class="eyebrow">WHAT SHE SAY DOES</p>
+      <h2>这里不只有消息，还有被认真保存的经验。</h2>
+      <div class="feature-grid">
+        <article class="feature"><div class="feature-title">记录日常</div><p>用文字与照片留住值得回看的小事，分享给同样会懂的人。</p></article>
+        <article class="feature"><div class="feature-title">发布刊物</div><p>将知识、观察与经历整理成有价值的内容，让好信息继续流动。</p></article>
+        <article class="feature"><div class="feature-title">进入茶室</div><p>围绕真正关心的话题，认识兴趣相近的朋友，展开坦诚的交流。</p></article>
+        <article class="feature"><div class="feature-title">安全的社区</div><p>内容审核与举报机制共同守护边界，让每位用户都能安心表达。</p></article>
+      </div>
+    </section>
 
-<h2>关于 SheSay</h2>
-<p>SheSay（她说）是面向女性的社区。在这里分享生活、知识与发现，和理解你的人建立真实连接。</p>
-
-<h2>Applications</h2>
-
-<div class="feature">
-  <div class="feature-title">📝 Post Daily Moments</div>
-  <p>Share the joy of everyday life. Post photos and text about your day — what you ate, where you went, what made you happy. Record the little moments worth remembering, and share them with women who get it.</p>
-</div>
-
-<div class="feature">
-  <div class="feature-title">📚 Publish Reports</div>
-  <p>Turn what you've seen and learned into something valuable. Write down knowledge, experiences, and discoveries — a useful tip, a new insight, a story worth telling — and let good information flow through the community.</p>
-</div>
-
-<div class="feature">
-  <div class="feature-title">🍵 Join Tea Rooms</div>
-  <p>Meet people who share your interests. Join themed Tea Rooms and chat about the topics you love, find like-minded friends, and build real connections in a women-only space.</p>
-</div>
-
-<p>We are committed to keeping SheSay a friendly and secure community, with content moderation and reporting tools in place to protect every user.</p>
-
-<h2>Legal &amp; Compliance</h2>
-<p>The documents below describe how we handle your privacy, your data, and child safety on our platform.</p>
-
-<a class="card" href="terms-of-service.html">
-  <div class="title">Terms of Service</div>
-  <div class="desc">The rules and conditions governing your use of the App.</div>
-</a>
-
-<a class="card" href="privacy-policy.html">
-  <div class="title">Privacy Policy</div>
-  <div class="desc">How we collect, use, store, share, and protect your personal information.</div>
-</a>
-
-<a class="card" href="data-deletion.html">
-  <div class="title">Account &amp; Data Deletion</div>
-  <div class="desc">How to request deletion of your account and all associated personal data.</div>
-</a>
-
-<a class="card" href="child-safety-standards.html">
-  <div class="title">Child Safety Standards</div>
-  <div class="desc">Our zero-tolerance policy toward child sexual abuse and exploitation (CSAE).</div>
-</a>
-
+    <section id="legal" class="paper home-content" style="margin-top:16px">
+      <p class="eyebrow">LEGAL &amp; SAFETY</p>
+      <h2>关于你的数据、权利与安全。</h2>
+      <div class="legal-grid">
+        <a class="legal-card" href="terms-of-service.html"><div class="title">服务条款</div><div class="desc">使用 SheSay 时适用的规则与条件。</div></a>
+        <a class="legal-card" href="privacy-policy.html"><div class="title">隐私政策</div><div class="desc">我们如何收集、使用、保存并保护信息。</div></a>
+        <a class="legal-card" href="data-deletion.html"><div class="title">账号与数据删除</div><div class="desc">申请删除账号及关联个人数据的方式。</div></a>
+        <a class="legal-card" href="child-safety-standards.html"><div class="title">儿童安全标准</div><div class="desc">我们对儿童性剥削与虐待内容零容忍。</div></a>
+      </div>
+    </section>
+    <footer class="site-footer">© SheSay · <a href="terms-of-service.html">服务条款</a><a href="privacy-policy.html">隐私政策</a></footer>
+  </main>
 </body>
 </html>

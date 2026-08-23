@@ -1,6 +1,62 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SheSay 钱包</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
-:root{--ink:#1a1720;--paper:#f8f3ee;--rose:#b34f6f;--line:#e8ddd7}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 5%,#f2d4dc 0 14%,transparent 35%),var(--paper);color:var(--ink);font:16px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}.shell{max-width:620px;margin:auto;padding:42px 22px 80px}.brand{letter-spacing:.17em;font:700 12px system-ui;color:var(--rose)}h1{font:700 42px Georgia,"Noto Serif SC",serif;margin:12px 0}.card{background:#fffdfa;border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 18px 50px #75414b14}.amount{font-size:48px;font-weight:700;margin:8px 0 26px}.muted{color:#756a70;line-height:1.65}button{border:0;border-radius:999px;padding:13px 20px;background:var(--ink);color:white;font-weight:700;cursor:pointer}button.secondary{background:transparent;border:1px solid var(--ink);color:var(--ink);margin-left:8px}.hidden{display:none}.recharge{margin-top:18px;border-top:1px solid var(--line);padding-top:20px}.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.option{min-height:72px;text-align:left;background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:12px}.option strong,.option span{display:block}.option span{color:#756a70;font-size:12px;margin-top:3px}.notice{margin-top:14px;font-size:14px;color:#756a70}.notice.error{color:#a12d49}a{color:var(--rose)}
-</style></head><body><main class="shell"><div class="brand">SHE SAY / WALLET</div><h1>你的钱包</h1><section id="loading" class="card muted">正在安全登录并读取余额…</section><section id="wallet" class="card hidden"><div class="muted" id="name">SheSay 用户</div><div class="amount" id="balance">$0.00</div><p class="muted">余额可用于订阅刊物、购买内容和支持作者。</p><button id="refresh">刷新余额</button><button class="secondary" id="logout">退出登录</button><div class="recharge"><strong>充值方式</strong><p class="muted">选择一种方式开始充值。</p><div class="options"><button class="option" data-method="alipay"><strong>支付宝</strong><span>人民币充值美元余额</span></button><button class="option" data-method="usdt"><strong>USDT</strong><span>链上充值（USDT）</span></button></div><div id="notice" class="notice" aria-live="polite"></div></div></section><section id="login" class="card hidden"><p class="muted">请先登录你的 SheSay 账号。</p><a href="auth.html#login">登录或注册</a></section></main><script>
-const sb=window.supabase.createClient('https://suxprwbmoakcbopjuosa.supabase.co','sb_publishable_JsggCmnvB1Q50l5z2W11Uw_AfKLxCx7');const $=id=>document.getElementById(id);async function load(){const{data:{user}}=await sb.auth.getUser();$('loading').classList.add('hidden');if(!user){$('login').classList.remove('hidden');return}$('wallet').classList.remove('hidden');$('name').textContent=user.user_metadata?.nickname||user.email;const{data,error}=await sb.from('wallets').select('balance').eq('user_id',user.id).maybeSingle();$('balance').textContent='$'+Number(data?.balance||0).toFixed(2);if(error){$('notice').textContent='余额读取失败，请刷新后重试。';$('notice').className='notice error'}}$('refresh').onclick=load;$('logout').onclick=async()=>{await sb.auth.signOut();location.replace('auth.html#login')};document.querySelectorAll('[data-method]').forEach(button=>button.onclick=()=>{$('notice').textContent=button.dataset.method==='alipay'?'支付宝商户收款尚未配置，暂不能发起真实扣款。':'USDT 收款网络和地址尚未配置，暂不能发起真实转账。';$('notice').className='notice'});load();
-</script></body></html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#a765c5">
+  <title>我的钱包 · SheSay</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <main class="wallet-shell">
+    <header class="site-header">
+      <a class="brand-link" href="index.html"><img class="brand-mark" src="app-icon.png" alt=""><span class="brand-word"><strong>SheSay</strong><small>她说 · SHE SAY</small></span></a>
+      <nav class="site-nav"><a href="index.html">官网首页</a><a class="nav-cta" href="auth.html#login">账号</a></nav>
+    </header>
+    <section id="loading" class="paper wallet-card muted">正在安全登录并读取余额…</section>
+    <section id="wallet" class="paper wallet-card hidden">
+      <p class="eyebrow">SHE SAY WALLET</p>
+      <h1>你的钱包</h1>
+      <p id="name" class="wallet-name">SheSay 用户</p>
+      <div id="balance" class="amount">$0.00</div>
+      <p class="muted">余额可用于订阅刊物、购买内容和支持作者。</p>
+      <div class="wallet-actions"><button id="refresh" class="button" type="button">刷新余额</button><button id="logout" class="button ghost" type="button">退出登录</button></div>
+      <div class="recharge">
+        <p class="eyebrow">RECHARGE</p>
+        <h2>充值方式</h2>
+        <p class="muted">官网保留支付宝与 USDT 两种充值入口；实际扣款会在支付服务配置完成后开启。</p>
+        <div class="payment-options">
+          <button class="payment-option" type="button" data-method="alipay"><strong>支付宝充值</strong><span>使用人民币充值 SheSay 钱包余额。</span></button>
+          <button class="payment-option" type="button" data-method="usdt"><strong>USDT 充值</strong><span>通过链上 USDT 为 SheSay 钱包充值。</span></button>
+        </div>
+        <div id="notice" class="notice" aria-live="polite"></div>
+      </div>
+    </section>
+    <section id="login" class="paper wallet-card hidden"><p class="eyebrow">SHE SAY WALLET</p><h1>先登录账号</h1><p class="muted">登录后即可查看钱包余额，并使用支付宝或 USDT 充值入口。</p><div class="wallet-actions"><a class="button" href="auth.html#login">登录或注册</a></div></section>
+  </main>
+  <script src="site.js"></script>
+  <script>
+    const $ = id => document.getElementById(id);
+    const sb = SheSay.client;
+    function notice(message, kind = '') { $('notice').textContent = message; $('notice').className = `notice ${kind}`; }
+    async function load() {
+      const { data: { user } } = await sb.auth.getUser();
+      $('loading').classList.add('hidden');
+      if (!user) { $('login').classList.remove('hidden'); return; }
+      $('wallet').classList.remove('hidden');
+      $('name').textContent = user.user_metadata?.nickname || user.email || 'SheSay 用户';
+      const { data, error } = await sb.from('wallets').select('balance').eq('user_id', user.id).maybeSingle();
+      $('balance').textContent = '$' + Number(data?.balance || 0).toFixed(2);
+      if (error) notice('余额读取失败，请刷新后重试。', 'error');
+    }
+    $('refresh').onclick = load;
+    $('logout').onclick = async () => { await sb.auth.signOut(); location.replace('auth.html#login'); };
+    document.querySelectorAll('[data-method]').forEach(button => button.onclick = () => {
+      const label = button.dataset.method === 'alipay' ? '支付宝充值' : 'USDT 充值';
+      notice(`${label}入口已保留。商户收款与链上地址尚未在官网配置，暂不能发起真实扣款。`);
+    });
+    load();
+  </script>
+</body>
+</html>
