@@ -9,15 +9,25 @@
 </head>
 <body>
 <main class="site-shell">
+<header class="home-header">
+  <a class="home-brand" href="index.html" aria-label="SheSay 首页">
+    <img src="app-icon.png" alt="" aria-hidden="true">
+    <span>SheSay</span>
+  </a>
+  <nav class="home-auth" aria-label="账号操作">
+    <a href="auth.html#login">登录</a>
+    <a class="home-register" href="auth.html#register">注册</a>
+  </nav>
+</header>
+
 <div class="hero">
-  <img class="home-icon" src="app-icon.png" alt="SheSay app icon">
-  <h1 style="font-size: 32px;">SheSay</h1>
+  <div class="hero-mark" aria-hidden="true">S</div>
+  <h1>SheSay</h1>
   <p class="tagline">女性的生活、发现与真实交流。</p>
 
   <!-- 下载按钮：App 尚未发布，先预留占位。正式发布后把 href 替换为真实的 APK/AAB 或 Google Play 链接 -->
   <a class="download-btn" href="#">下载 App</a>
   <p class="coming-soon">App 即将上线。</p>
-  <p><a class="auth-btn" href="auth.html#login">登录</a><a class="auth-btn" href="auth.html#register">注册</a><a class="auth-btn" href="wallet.html">我的钱包</a></p>
 </div>
 
 <h2>关于 SheSay</h2>
