@@ -12,10 +12,9 @@
 <body>
   <main class="auth-stage">
     <section class="paper auth-card">
-      <a class="brand-link" href="index.html"><img class="brand-mark" src="app-icon.png" alt=""><span class="brand-word"><strong>SheSay</strong><small>她说 · SHE SAY</small></span></a>
-      <p class="eyebrow" style="margin-top:28px">ACCOUNT</p>
+      <div class="brand">SHE SAY / ACCOUNT</div>
       <h1 id="title">欢迎回来</h1>
-      <p id="subtitle" class="auth-subtitle">使用邮箱与密码登录，进入你的 SheSay 钱包。</p>
+      <p id="subtitle" class="auth-subtitle">登录后可以在网页查看你的美元钱包余额。</p>
 
       <div class="tabs" role="tablist" aria-label="账号操作">
         <button id="loginTab" type="button" class="active" role="tab">登录</button>
@@ -94,12 +93,12 @@
       $('registerTab').classList.toggle('active', registering);
       $('title').textContent = registering ? '创建你的账号' : '欢迎回来';
       $('subtitle').textContent = registering
-        ? '先验证邮箱，再创建与你一致的 SheSay 账号。'
-        : '使用邮箱与密码登录，进入你的 SheSay 钱包。';
+        ? '使用邮箱创建 SheSay 账号。'
+        : '登录后可以在网页查看你的美元钱包余额。';
       $('nicknameField').classList.toggle('hidden', !registering);
       $('verifyFields').classList.toggle('hidden', !registering);
       $('password').autocomplete = registering ? 'new-password' : 'current-password';
-      $('submit').textContent = registering ? '验证验证码并继续' : '登录并进入钱包';
+      $('submit').textContent = registering ? '注册' : '登录并进入钱包';
       $('existingChoice').classList.add('hidden');
       showNotice();
       if (registering) setTimeout(renderCaptcha, 0);

@@ -10,30 +10,25 @@
 </head>
 <body>
   <main class="wallet-shell">
-    <header class="site-header">
-      <a class="brand-link" href="index.html"><img class="brand-mark" src="app-icon.png" alt=""><span class="brand-word"><strong>SheSay</strong><small>她说 · SHE SAY</small></span></a>
-      <nav class="site-nav"><a href="index.html">官网首页</a><a class="nav-cta" href="auth.html#login">账号</a></nav>
-    </header>
+    <div class="brand">SHE SAY / WALLET</div>
     <section id="loading" class="paper wallet-card muted">正在安全登录并读取余额…</section>
     <section id="wallet" class="paper wallet-card hidden">
-      <p class="eyebrow">SHE SAY WALLET</p>
       <h1>你的钱包</h1>
       <p id="name" class="wallet-name">SheSay 用户</p>
       <div id="balance" class="amount">$0.00</div>
       <p class="muted">余额可用于订阅刊物、购买内容和支持作者。</p>
       <div class="wallet-actions"><button id="refresh" class="button" type="button">刷新余额</button><button id="logout" class="button ghost" type="button">退出登录</button></div>
       <div class="recharge">
-        <p class="eyebrow">RECHARGE</p>
-        <h2>充值方式</h2>
-        <p class="muted">官网保留支付宝与 USDT 两种充值入口；实际扣款会在支付服务配置完成后开启。</p>
+        <strong>充值方式</strong>
+        <p class="muted">选择一种方式开始充值。</p>
         <div class="payment-options">
-          <button class="payment-option" type="button" data-method="alipay"><strong>支付宝充值</strong><span>使用人民币充值 SheSay 钱包余额。</span></button>
-          <button class="payment-option" type="button" data-method="usdt"><strong>USDT 充值</strong><span>通过链上 USDT 为 SheSay 钱包充值。</span></button>
+          <button class="payment-option" type="button" data-method="alipay"><strong>支付宝</strong><span>人民币充值美元余额</span></button>
+          <button class="payment-option" type="button" data-method="usdt"><strong>USDT</strong><span>链上充值（USDT）</span></button>
         </div>
         <div id="notice" class="notice" aria-live="polite"></div>
       </div>
     </section>
-    <section id="login" class="paper wallet-card hidden"><p class="eyebrow">SHE SAY WALLET</p><h1>先登录账号</h1><p class="muted">登录后即可查看钱包余额，并使用支付宝或 USDT 充值入口。</p><div class="wallet-actions"><a class="button" href="auth.html#login">登录或注册</a></div></section>
+    <section id="login" class="paper wallet-card hidden"><p class="muted">请先登录你的 SheSay 账号。</p><a href="auth.html#login">登录或注册</a></section>
   </main>
   <script src="site.js"></script>
   <script>
@@ -53,8 +48,7 @@
     $('refresh').onclick = load;
     $('logout').onclick = async () => { await sb.auth.signOut(); location.replace('auth.html#login'); };
     document.querySelectorAll('[data-method]').forEach(button => button.onclick = () => {
-      const label = button.dataset.method === 'alipay' ? '支付宝充值' : 'USDT 充值';
-      notice(`${label}入口已保留。商户收款与链上地址尚未在官网配置，暂不能发起真实扣款。`);
+      notice(button.dataset.method === 'alipay' ? '支付宝商户收款尚未配置，暂不能发起真实扣款。' : 'USDT 收款网络和地址尚未配置，暂不能发起真实转账。');
     });
     load();
   </script>
