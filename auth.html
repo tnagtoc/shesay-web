@@ -60,6 +60,10 @@
   <script>
     const $ = id => document.getElementById(id);
     const sb = SheSay.client;
+    const requestedNext = new URLSearchParams(location.search).get('next');
+    const returnTo = requestedNext && requestedNext.startsWith('/') && !requestedNext.startsWith('//')
+      ? requestedNext
+      : 'wallet.html';
     let mode = location.hash === '#register' ? 'register' : 'login';
     let challengeId = null;
     let captchaWidget = null;
@@ -143,7 +147,7 @@
         return;
       }
       await setProfile();
-      location.replace('wallet.html');
+      location.replace(returnTo);
     }
     async function sendCode() {
       const email = $('email').value.trim();
@@ -173,14 +177,14 @@
             email: $('email').value.trim(), password: $('password').value,
           });
           if (error) throw error;
-          location.replace('wallet.html');
+          location.replace(returnTo);
         } else {
           await verifyRegistration();
         }
       } catch (error) { showNotice(error.message || 'Something went wrong. Please try again.', 'error'); }
       finally { button.disabled = false; }
     };
-    $('keepAccount').onclick = () => location.replace('wallet.html');
+    $('keepAccount').onclick = () => location.replace(returnTo);
     $('replaceAccount').onclick = async () => {
       if (!verifiedSession || !confirm('Delete the original account and all data to create a new account? This cannot be undone.')) return;
       const button = $('replaceAccount'); button.disabled = true;
@@ -193,7 +197,7 @@
           email: $('email').value.trim(), password: $('password').value,
         });
         if (error) throw error;
-        location.replace('wallet.html');
+        location.replace(returnTo);
       } catch (error) { showNotice(error.message || 'Could not create the new account.', 'error'); }
       finally { button.disabled = false; }
     };
