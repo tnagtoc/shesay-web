@@ -39,11 +39,7 @@
       $('wallet').classList.remove('hidden');
       $('name').textContent = user.user_metadata?.nickname || user.email || 'SheSay user';
       const { data, error } = await sb.from('wallets').select('balance').eq('user_id', user.id).maybeSingle();
-      $('balance').textContent = '
-  </script>
-</body>
-</html>
- + Number(data?.balance || 0).toFixed(2);
+      $('balance').textContent = '$' + Number(data?.balance || 0).toFixed(2);
       if (error) notice('Could not load your balance. Please refresh and try again.', 'error');
 
       const { data: methods, error: methodsError } = await sb
@@ -51,8 +47,10 @@
         .select('id,method,display_name,network,address,note,sort_order')
         .order('sort_order', { ascending: true })
         .order('id', { ascending: true });
+
       const options = $('paymentOptions');
       options.replaceChildren();
+
       if (methodsError) {
         notice('Could not load payment methods. Please refresh and try again.', 'error');
       } else if (!methods?.length) {
@@ -67,17 +65,23 @@
           button.type = 'button';
 
           const title = document.createElement('strong');
-          title.textContent = [method.display_name, method.network].filter(Boolean).join(' · ');
+          title.textContent = [method.display_name || method.method, method.network]
+            .filter(Boolean)
+            .join(' · ');
+
           const detail = document.createElement('span');
           detail.textContent = method.note || 'View receiving details';
-          button.append(title, detail);
 
+          button.append(title, detail);
           button.onclick = () => {
             const parts = [];
             if (method.network) parts.push(`Network: ${method.network}`);
             if (method.address) parts.push(`Address: ${method.address}`);
             if (method.note) parts.push(method.note);
-            notice(parts.join(' · ') || 'Payment details are unavailable.', parts.length ? 'success' : 'error');
+            notice(
+              parts.join(' · ') || 'Payment details are unavailable.',
+              parts.length ? 'success' : 'error',
+            );
           };
           options.appendChild(button);
         }
