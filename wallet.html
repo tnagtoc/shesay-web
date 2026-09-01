@@ -21,10 +21,7 @@
       <div class="recharge">
         <strong>Top up</strong>
         <p class="muted">Choose a method to begin.</p>
-        <div class="payment-options">
-          <button class="payment-option" type="button" data-method="alipay"><strong>Alipay</strong><span>Top up your USD balance in CNY</span></button>
-          <button class="payment-option" type="button" data-method="usdt"><strong>USDT</strong><span>On-chain USDT top up</span></button>
-        </div>
+        <div id="paymentOptions" class="payment-options"></div>
         <div id="notice" class="notice" aria-live="polite"></div>
       </div>
     </section>
@@ -34,7 +31,38 @@
   <script>
     const $ = id => document.getElementById(id);
     const sb = SheSay.client;
+    const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
+    })[character]);
     function notice(message, kind = '') { $('notice').textContent = message; $('notice').className = `notice ${kind}`; }
+    async function loadPaymentMethods() {
+      const { data, error } = await sb.from('payment_methods')
+        .select('id,display_name,network,address,note,sort_order')
+        .eq('method', 'usdt')
+        .order('sort_order')
+        .order('id');
+      if (error) throw error;
+      const methods = data || [];
+      $('paymentOptions').innerHTML = methods.length
+        ? methods.map(method => `<button class="payment-option" type="button"
+            data-network="${escapeHtml(method.network)}"
+            data-address="${escapeHtml(method.address)}"
+            data-note="${escapeHtml(method.note)}">
+            <strong>${escapeHtml(method.display_name)}</strong>
+            <span>${escapeHtml(method.network || 'USDT')}</span>
+          </button>`).join('')
+        : '<p class="muted">No USDT receiving address is currently available.</p>';
+      $('paymentOptions').querySelectorAll('.payment-option').forEach(button => {
+        button.onclick = () => {
+          const details = [
+            button.dataset.network && `Network: ${button.dataset.network}`,
+            button.dataset.address && `Address: ${button.dataset.address}`,
+            button.dataset.note,
+          ].filter(Boolean).join('\n');
+          notice(details || 'This payment method is not fully configured.', details ? 'success' : 'error');
+        };
+      });
+    }
     async function load() {
       const { data: { user } } = await sb.auth.getUser();
       $('loading').classList.add('hidden');
@@ -44,12 +72,11 @@
       const { data, error } = await sb.from('wallets').select('balance').eq('user_id', user.id).maybeSingle();
       $('balance').textContent = '$' + Number(data?.balance || 0).toFixed(2);
       if (error) notice('Could not load your balance. Please refresh and try again.', 'error');
+      try { await loadPaymentMethods(); }
+      catch (_) { notice('Could not load USDT payment methods. Please refresh and try again.', 'error'); }
     }
     $('refresh').onclick = load;
     $('logout').onclick = async () => { await sb.auth.signOut(); location.replace('auth.html#login'); };
-    document.querySelectorAll('[data-method]').forEach(button => button.onclick = () => {
-      notice(button.dataset.method === 'alipay' ? 'Alipay merchant collection is not configured, so no real charge can be started yet.' : 'The USDT receiving network and address are not configured, so no real transfer can be started yet.');
-    });
     load();
   </script>
 </body>
