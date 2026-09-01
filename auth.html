@@ -39,9 +39,11 @@
             <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Enter the code from your email">
             <button id="sendCode" class="button ghost" type="button">Send code</button>
           </div>
-          <div id="captcha" class="captcha-wrap"></div>
           <p class="auth-note">The code confirms email ownership. If this email already has an account, you can keep it or permanently delete it before creating a new one.</p>
         </div>
+
+        <label>Human verification</label>
+        <div id="captcha" class="captcha-wrap"></div>
 
         <button id="submit" class="button auth-submit" type="submit">Log in and open wallet</button>
       </form>
@@ -81,13 +83,17 @@
       if (password.length < 6 || password.length > 16 || /\s/.test(password)) throw new Error('Password must be 6–16 characters with no spaces.');
     }
     function renderCaptcha() {
-      if (mode !== 'register' || !window.hcaptcha || captchaWidget !== null) return;
+      if (!window.hcaptcha || captchaWidget !== null) return;
       captchaWidget = hcaptcha.render('captcha', {
         sitekey: 'e57677ec-021c-445c-8570-cc848e5ae820',
         callback: token => { captchaToken = token; },
         'expired-callback': () => { captchaToken = ''; },
         theme: 'light',
       });
+    }
+    function resetCaptcha() {
+      captchaToken = '';
+      if (captchaWidget !== null && window.hcaptcha) hcaptcha.reset(captchaWidget);
     }
     window.onHcaptchaLoaded = renderCaptcha;
 
@@ -105,14 +111,13 @@
       $('submit').textContent = registering ? 'Sign up' : 'Log in and open wallet';
       $('existingChoice').classList.add('hidden');
       showNotice();
-      if (registering) setTimeout(renderCaptcha, 0);
+      setTimeout(renderCaptcha, 0);
     }
     function setMode(nextMode) {
       mode = nextMode;
       challengeId = null;
       verifiedSession = null;
-      captchaToken = '';
-      if (captchaWidget !== null && window.hcaptcha) hcaptcha.reset(captchaWidget);
+      resetCaptcha();
       history.replaceState(null, '', nextMode === 'register' ? '#register' : '#login');
       render();
     }
@@ -157,6 +162,7 @@
       const started = await SheSay.fusion('startEmailRegistration', { email });
       const { error } = await sb.auth.signInWithOtp({ email, options: { captchaToken } });
       if (error) throw error;
+      resetCaptcha();
       challengeId = started.challengeId;
       showNotice('Verification code sent. Check your email.', 'success');
     }
@@ -164,7 +170,10 @@
     $('registerTab').onclick = () => setMode('register');
     $('sendCode').onclick = async () => {
       const button = $('sendCode'); button.disabled = true;
-      try { await sendCode(); } catch (error) { showNotice(error.message || 'Could not send verification code.', 'error'); }
+      try { await sendCode(); } catch (error) {
+        resetCaptcha();
+        showNotice(error.message || 'Could not send verification code.', 'error');
+      }
       finally { button.disabled = false; }
     };
     $('form').onsubmit = async event => {
@@ -173,16 +182,23 @@
       showNotice('Processing securely…');
       try {
         if (mode === 'login') {
-          const { error } = await sb.auth.signInWithPassword({
+          if (!captchaToken) throw new Error('Complete the human verification first.');
+          const { data, error } = await sb.auth.signInWithPassword({
             email: $('email').value.trim(), password: $('password').value,
+            options: { captchaToken },
           });
           if (error) throw error;
-          location.replace(returnTo);
+          if (!data.session) throw new Error('Login completed without a session. Please try again.');
+          showNotice('Login successful. Opening your wallet…', 'success');
+          location.assign(new URL(returnTo, location.href).href);
         } else {
           await verifyRegistration();
         }
       } catch (error) { showNotice(error.message || 'Something went wrong. Please try again.', 'error'); }
-      finally { button.disabled = false; }
+      finally {
+        if (mode === 'login') resetCaptcha();
+        button.disabled = false;
+      }
     };
     $('keepAccount').onclick = () => location.replace(returnTo);
     $('replaceAccount').onclick = async () => {
@@ -193,8 +209,10 @@
           challengeId, password: $('password').value, nickname: $('nickname').value.trim(),
         }, verifiedSession.access_token);
         await sb.auth.signOut();
+        if (!captchaToken) throw new Error('Complete the human verification first.');
         const { error } = await sb.auth.signInWithPassword({
           email: $('email').value.trim(), password: $('password').value,
+          options: { captchaToken },
         });
         if (error) throw error;
         location.replace(returnTo);
